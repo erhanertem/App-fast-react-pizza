@@ -4,20 +4,26 @@ import Menu from './features/menu/Menu'
 import Cart from './features/cart/Cart'
 import CreateOrder from './features/order/CreateOrder'
 import Order from './features/order/Order'
+import AppLayout from './ui/AppLayout'
 
 //VERY IMPORTANT! THIS NEW WAY OF ROUTING IS REQUIRED TO ENABLE DATA FETCHING W/REACT ROUTER
 const router = createBrowserRouter([
-	{ path: '/', element: <Home /> },
 	{
-		path: '/menu',
-		element: <Menu />,
+		element: <AppLayout />,
+		children: [
+			{ path: '/', element: <Home /> },
+			{
+				path: '/menu',
+				element: <Menu />,
+			},
+			{
+				path: '/cart',
+				element: <Cart />,
+			},
+			{ path: '/order/new', element: <CreateOrder /> },
+			{ path: '/order/:orderId', element: <Order /> },
+		],
 	},
-	{
-		path: '/cart',
-		element: <Cart />,
-	},
-	{ path: '/order/new', element: <CreateOrder /> },
-	{ path: '/order/:orderId', element: <Order /> },
 ])
 
 function App() {
