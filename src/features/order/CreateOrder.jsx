@@ -1,6 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import { useState } from 'react'
+import { Form, redirect } from 'react-router-dom'
+import { createOrder } from '../../services/apiRestaurant'
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = str =>
@@ -40,7 +43,11 @@ function CreateOrder() {
 		<div>
 			<h2>Ready to order? Let's go!</h2>
 
-			<form>
+			{/* <form> */}
+			{/* IN ORDER TO MAKE FORM PLAY NICELY WITH REACT-ROUTER IN ACTIONS SUCH AS 'POST', 'PATCH', 'DELETE', WE HAVE TO USE THE FORM COMPONENT PROVIDED BY REACT-ROUTER-DOM */}
+			{/* <Form method="POST" action="/order/new"> */}
+			{/* NO NEED TO SPECIFY THE ROUTE AS IT SNAPS TO CURRENT ACTION ROUTE AUTOMATICALLY */}
+			<Form method="POST">
 				<div>
 					<label>First Name</label>
 					<input type="text" name="customer" required />
@@ -72,11 +79,35 @@ function CreateOrder() {
 				</div>
 
 				<div>
+					<input type="hidden" name="cart" value={JSON.stringify(cart)} />
 					<button>Order now</button>
 				</div>
-			</form>
+			</Form>
+			{/* </form> */}
 		</div>
 	)
+}
+
+//NOTE: Action function is provided with {action} object thru Form react-router-dom component
+export async function action({ request }) {
+	const formData = await request.formData() //formData() is a regular WEB API @ https://developer.mozilla.org/en-US/docs/Web/API/FormData
+	// console.log(formData)
+	const data = Object.fromEntries(formData) //Convert form data to a readable object
+	console.log('⛔', data)
+
+	//RESTRUCTURE THE FORMDATA COMPOSITION
+	const order = {
+		...data,
+		cart: JSON.parse(data.cart),
+		priority: data.priority === 'on',
+	}
+	// console.log(order)
+
+	//EXECUTE FETCHING FUNCTION
+	const newOrder = await createOrder(order) //Returns data so we have to await
+
+	//REFLECT THE ORDERID ON THE URL
+	return redirect(`/order/${newOrder.id}`) //Provided by react-router function as we cant use useNavigate() inside regular functions...
 }
 
 export default CreateOrder
