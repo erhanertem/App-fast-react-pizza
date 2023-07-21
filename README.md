@@ -24,14 +24,15 @@
 <details>
 <summary>Installed NPM packages and utilized APIs:</summary>
 
-| Package command                                 | Package link | Description                 |
-| ----------------------------------------------- | ------------ | --------------------------- |
-| npm create vite@latest                          |              |                             |
-| npm i eslint -D                                 |              |                             |
-| npm i vite-plugin-eslint -D                     |              |                             |
-| npm i eslint-config-react-app -D                |              |                             |
-| npm install -D tailwindcss postcss autoprefixer |              | Install tailwind for vite   |
-| npx tailwindcss init -p                         |              | Create tailwind config file |
+| Package command                                     | Package link                                                | Description                                                         |
+| --------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------- |
+| npm create vite@latest                              |                                                             |                                                                     |
+| npm i eslint -D                                     |                                                             |                                                                     |
+| npm i vite-plugin-eslint -D                         |                                                             |                                                                     |
+| npm i eslint-config-react-app -D                    |                                                             |                                                                     |
+| npm install -D tailwindcss postcss autoprefixer     | https://tailwindcss.com/docs/guides/vite                    | Install tailwind for vite                                           |
+| npx tailwindcss init -p                             |                                                             | Create tailwind config file                                         |
+| npm install -D prettier prettier-plugin-tailwindcss | https://github.com/tailwindlabs/prettier-plugin-tailwindcss | Create tailwind prettier extension that sorts classes automatically |
 
 </details>
 
