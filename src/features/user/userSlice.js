@@ -24,19 +24,24 @@ async function fetchAddress() {
 */
 
 const initialState = {
-  username: 'JONAAAA',
+  username: '',
 };
 
+//SLICE OF OUR GLOBAL UI STATE
 const userSlice = createSlice({
+  //REDUCER NAME
   name: 'user',
   initialState,
   reducers: {
+    //REDUCER ACTIONS
     updateName(state, action) {
       state.username = action.payload;
     },
   },
 });
 
+//EXPORT REDUCER ACTIONS
 export const { updateName } = userSlice.actions;
 
+//EXPORT REDUCER SLICE
 export default userSlice.reducer;
