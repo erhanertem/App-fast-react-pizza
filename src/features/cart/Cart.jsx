@@ -19,7 +19,7 @@ function Cart() {
   return (
     <div className="px-4 py-3">
       <div className="text-sm text-blue-500 hover:text-blue-600">
-        <span>&larr;</span>
+        <span>&larr;&#32;</span>
         <LinkButton to="/menu">Back to menu</LinkButton>
       </div>
 
