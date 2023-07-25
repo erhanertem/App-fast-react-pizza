@@ -47,4 +47,4 @@ export const { updateName } = userSlice.actions;
 export default userSlice.reducer;
 
 //REDUX RECOMMENDS PUTTING ALL STATE RELATED FUNCTIONS PUT INSIDE THE SLICER FILE AND START WITH GET***** NAMING CONVENTION
-export const getUsername = (state) => state.cart.username;
+export const getUsername = (state) => state.user.username;
