@@ -24,7 +24,7 @@ const cartSlice = createSlice({
     },
     deleteItem(state, action) {
       //payload is pizzaId
-      state.cart = state.cart.filter((item) => item !== action.payload);
+      state.cart = state.cart.filter((item) => item.pizzaId !== action.payload);
     },
     clearCart(state) {
       //do not need action here, so omitted
@@ -58,6 +58,8 @@ export default cartSlice.reducer;
 //REDUX RECOMMENDS PUTTING ALL STATE RELATED FUNCTIONS PUT INSIDE THE SLICER FILE AND START WITH GET***** NAMING CONVENTION
 export const getTotalCartQuantity = (state) =>
   state.cart.cart.reduce((sum, item) => sum + item.quantity, 0);
+
 export const getTotalCartPrice = (state) =>
   state.cart.cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
 export const getCart = (state) => state.cart.cart;
