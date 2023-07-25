@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 function CreateUser() {
   const [username, setUsername] = useState('');
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch(); //part of react-redux connector
+  const navigate = useNavigate(); //part of react-router
 
   function handleSubmit(e) {
     e.preventDefault();
