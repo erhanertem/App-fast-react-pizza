@@ -50,7 +50,7 @@ const router = createBrowserRouter([
 // 		errorElement: <Error />, //designate the error handler component for incorrect routes
 // 		children: [
 // 			//designate the child routes and the corresponding components
-// 			//CUTTING OFF THE ERROR HANDLING SPREADING TO ALL COMPONENTS VIA SECOND LEVEL CHIL USING OUTLET
+// 			//CUTTING OFF THE ERROR HANDLING BUBBLING VIA SECOND LEVEL CHILD USING OUTLET
 // 			{
 // 				element: <Outlet />,
 // 				errorElement: <Error />,
