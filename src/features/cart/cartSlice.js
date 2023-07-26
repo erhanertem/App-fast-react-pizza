@@ -41,6 +41,10 @@ const cartSlice = createSlice({
       const item = state.cart.find((item) => item.pizzaId === action.payload);
       item.quantity--;
       item.totalPrice = item.quantity * item.unitPrice;
+
+      //IF DEDUCTION IS EQUAL ZERO PIZZA ITEM - REMOVE IT FROM THE CART!! CHECK
+      // console.log(cartSlice);
+      if (item.quantity === 0) cartSlice.caseReducers.deleteItem(state, action); //VERY IMPORTANT - CALLING A REDUCER FUNCTION WITHIN A REDUCER OBJECT... caseReducers encapsulates all the functions within the reducer!
     },
   },
 });
