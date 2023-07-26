@@ -5,9 +5,10 @@ import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant';
 import Button from '../../ui/Button';
 import { useSelector } from 'react-redux';
-import { getCart } from '../cart/cartSlice';
+import { clearCart, getCart } from '../cart/cartSlice';
 import EmptyCart from '../cart/EmptyCart';
 import { getUsername } from '../user/userSlice';
+import store from '../../store'
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -117,6 +118,9 @@ export async function action({ request }) {
 
   //EXECUTE FETCHING FUNCTION IF EVERY THING PASSES W/NO ERROR
   const newOrder = await createOrder(order); //Returns data so we have to await
+
+  //VERY IMPORTANT!!! AFTER CHECKOUT AND SUMMARY PAGE IS DISPLAYED, WE NEED TO GET RID OF (RESET) THE ORDER SUMMARY FOOTER. FOR THAT WE WOULD NEED ACCESS TO STORE STATE OUT OF THE COMPONENT. WHILE THIS IS NOT POSSIBLE OUT OF A COMPONENT, WE FORCEFULLY IMPORT STORE TO THIS COMPONENT AND USE DISPATCH BRUTEFORCE IN A REGULAR FUNCTION BODY. DO NOT USE TECHNIQUE WHENEVER POSSIBLE AS REDUX DISABLES SOME PERFORMANCE OPTIMIZATIONS TO ACHIEVE THIS.
+  store.dispatch(clearCart())
 
   //REFLECT THE ORDERID ON THE URL
   return redirect(`/order/${newOrder.id}`); //Provided by react-router function as we cant use useNavigate() inside regular functions...
