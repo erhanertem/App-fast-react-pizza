@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import { formatCurrency } from '../../utils/helpers';
 import Button from '../../ui/Button';
 import { useDispatch, useSelector } from 'react-redux';
