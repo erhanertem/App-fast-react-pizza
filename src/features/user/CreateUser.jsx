@@ -1,42 +1,26 @@
 import { useState } from 'react';
-import Button from '../../ui/Button';
-import { useDispatch } from 'react-redux';
-import { updateName } from './userSlice';
-import { useNavigate } from 'react-router-dom';
 
 function CreateUser() {
   const [username, setUsername] = useState('');
 
-  const dispatch = useDispatch(); //part of react-redux connector
-  const navigate = useNavigate(); //part of react-router
-
   function handleSubmit(e) {
     e.preventDefault();
-
-    //ONLY ON FORM SUBMITTAL, WE SHOULD USE REDUX STORE
-    if (!username) return;
-    dispatch(updateName(username));
-    navigate('/menu');
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <p className="text-tone-600 mb-4 text-sm md:text-base">
-        👋 Welcome! Please start by telling us your name:
-      </p>
+      <p>👋 Welcome! Please start by telling us your name:</p>
 
       <input
         type="text"
         placeholder="Your full name"
         value={username}
-        //WE SHOULD LOCALLY UPDATE STATE NOT USE REDUX STORE
         onChange={(e) => setUsername(e.target.value)}
-        className="input mb-8 w-72"
       />
 
       {username !== '' && (
         <div>
-          <Button type="primary">Start ordering</Button>
+          <button>Start ordering</button>
         </div>
       )}
     </form>

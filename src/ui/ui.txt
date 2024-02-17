@@ -1,0 +1,1 @@
+Presentational components w/ no side effects gets into this folder

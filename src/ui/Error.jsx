@@ -1,18 +1,19 @@
-import { useRouteError } from 'react-router-dom';
-import LinkButton from './LinkButton';
+import { useNavigate, useRouteError } from 'react-router-dom';
 
 function Error() {
-  const error = useRouteError();
-  console.log(error);
-  return (
-    <div>
-      <h1>Something went wrong 😢</h1>
-      <p>{error.data || error.message}</p>
-      {/* error from the incorrect errorElement @ Applayout || error from fetching induced problem such as wrong api adress or nonresponsive server */}
+	// REACT ROUTER PROGRAMMATIC NAVIGATION HOOK
+	const navigate = useNavigate();
+	// REACT ROUTER HOOK THAT PROVIDES THE ERROR MESSAGE HITTING THE ERRORELEMENT IN THE ROUTER
+	const error = useRouteError();
+	// console.log(error);
 
-      <LinkButton to="-1">&larr; Go back</LinkButton>
-    </div>
-  );
+	return (
+		<div>
+			<h1>Something went wrong 😢</h1>
+			<p>{error.data || error.message}</p>
+			<button onClick={() => navigate(-1)}>&larr; Go back</button>
+		</div>
+	);
 }
 
 export default Error;

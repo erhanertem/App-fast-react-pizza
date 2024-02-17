@@ -1,134 +1,119 @@
 /* eslint-disable react-refresh/only-export-components */
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-unused-vars */
-import { useState } from 'react';
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant';
-import Button from '../../ui/Button';
-import { useSelector } from 'react-redux';
-import { clearCart, getCart, getTotalCartPrice } from '../cart/cartSlice';
-import EmptyCart from '../cart/EmptyCart';
-import { getUsername } from '../user/userSlice';
-import store from '../../store'
-import { formatCurrency } from '../../utils/helpers'
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
-  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str,
-  );
+	/^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(str);
 
-  function CreateOrder() {
-    const [withPriority, setWithPriority] = useState(false);
-    const navigation = useNavigation();
-  // console.log(navigation)
-  const isSubmitting = navigation.state === 'submitting';
-  
-  const formErrors = useActionData(); //THIS HOOK READS THE DATA RETURNED TO ACTION
-  
-  const username = useSelector(getUsername);
-  const cart = useSelector(getCart);
-  const totalCartPrice = useSelector(getTotalCartPrice);
-  const priorityPrice = withPriority ? totalCartPrice*0.2 : 0
-  const totalPrice = totalCartPrice+priorityPrice
+const fakeCart = [
+	{
+		pizzaId: 12,
+		name: 'Mediterranean',
+		quantity: 2,
+		unitPrice: 16,
+		totalPrice: 32,
+	},
+	{
+		pizzaId: 6,
+		name: 'Vegetale',
+		quantity: 1,
+		unitPrice: 13,
+		totalPrice: 13,
+	},
+	{
+		pizzaId: 11,
+		name: 'Spinach and Mushroom',
+		quantity: 1,
+		unitPrice: 15,
+		totalPrice: 15,
+	},
+];
 
-  if (!cart.length) return <EmptyCart />;
-  console.log(cart);
-  return (
-    <div className="px-4 py-6">
-      <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
+function CreateOrder() {
+	// PROVIDES STATE OF NAVIGATION REACT-ROUTER HOOK
+	const navigation = useNavigation();
+	// Available states are : idle, loading , submitting
+	const isSubmitting = navigation.state === 'submitting';
 
-      {/* <form> */}
-      {/* IN ORDER TO MAKE FORM PLAY NICELY WITH REACT-ROUTER IN ACTIONS SUCH AS 'POST', 'PATCH', 'DELETE', WE HAVE TO USE THE FORM COMPONENT PROVIDED BY REACT-ROUTER-DOM */}
-      {/* <Form method="POST" action="/order/new"> */}
-      {/* NO NEED TO SPECIFY THE ROUTE AS IT SNAPS TO CURRENT ACTION ROUTE AUTOMATICALLY */}
-      <Form method="POST">
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">First Name</label>
-          <div className="grow">
-            <input
-              className="input capitalize"
-              type="text"
-              name="customer"
-              defaultValue={username}
-              required
-            />
-          </div>
-        </div>
+	const formErrors = useActionData();
 
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Phone number</label>
-          <div className="grow">
-            <input className="input" type="tel" name="phone" required />
-            {formErrors?.phone && (
-              <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
-                {formErrors.phone}
-              </p>
-            )}
-          </div>
-        </div>
+	// const [withPriority, setWithPriority] = useState(false);
+	const cart = fakeCart;
 
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Address</label>
-          <div className="grow">
-            <input className="input" type="text" name="address" required />
-          </div>
-        </div>
+	return (
+		<div>
+			<h2>Ready to order? Let's go!</h2>
 
-        <div className="mb-12 flex items-center gap-5">
-          <input
-            className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
-            type="checkbox"
-            name="priority"
-            id="priority"
-            value={withPriority}
-            onChange={(event) => setWithPriority(event.target.checked)}
-          />
-          <label htmlFor="priority">Want to yo give your order priority?</label>
-        </div>
+			{/* FORM IS A SPECIAL SUBSTITUTE COMPONENT PROVIDED BY REACT ROUTER */}
+			{/* <Form method="POST" action="/order/new"> */}
+			{/* either as strictly specify the action route or have react-router handle this w/ the possible nearest route */}
+			<Form method="POST">
+				<div>
+					<label>First Name</label>
+					<input type="text" name="customer" required />
+				</div>
 
-        <div>
-          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <Button disabled={isSubmitting} type="primary">
-            {isSubmitting ? 'Placing order...' : `Order now from ${formatCurrency(totalPrice)}`}
-          </Button>
-        </div>
-      </Form>
-      {/* </form> */}
-    </div>
-  );
+				<div>
+					<label>Phone number</label>
+					<div>
+						<input type="tel" name="phone" required />
+					</div>
+					{formErrors?.phone && <p>{formErrors.phone}</p>}
+				</div>
+
+				<div>
+					<label>Address</label>
+					<div>
+						<input type="text" name="address" required />
+					</div>
+				</div>
+
+				<div>
+					<input
+						type="checkbox"
+						name="priority"
+						id="priority"
+						// value={withPriority}
+						// onChange={(e) => setWithPriority(e.target.checked)}
+					/>
+					<label htmlFor="priority">Want to yo give your order priority?</label>
+				</div>
+
+				<div>
+					{/* TODO - FOR TEMP TESTING PURPOSES - FAKE CART  */}
+					<input type="hidden" name="cart" value={JSON.stringify(cart)} />
+					<button disabled={isSubmitting}>{isSubmitting ? 'Placing order...' : 'Order now'}</button>
+				</div>
+			</Form>
+		</div>
+	);
 }
 
-//NOTE: Action function is provided with {action} object thru Form react-router-dom component
 export async function action({ request }) {
-  const formData = await request.formData(); //formData() is a regular WEB API @ https://developer.mozilla.org/en-US/docs/Web/API/FormData
-  // console.log(formData)
-  const data = Object.fromEntries(formData); //Convert form data to a readable object
-  // console.log('⛔', data)
+	// console.log(request);
+	// Request {method: 'POST', url: 'http://localhost:5173/order/new', headers: Headers, destination: '', referrer: 'about:client', …}
+	const formData = await request.formData(); //FORMDATA() IS A WEB API FUNCTION FOR FORMS  RETURNING FORMDATA OBJECT. EMBEDDED IN PROTYPE OF REQUEST OBJECT.
+	const data = Object.fromEntries(formData); //FROMENTRIES STATIC JS OBJECT METHOD REMAPS ITERABLE OBJECTS TO KEY/VALUE PAIRS OBJECT
+	// console.log(formData);
+	// console.log(data);
 
-  //RESTRUCTURE THE FORMDATA COMPOSITION
-  const order = {
-    ...data,
-    cart: JSON.parse(data.cart),
-    priority: data.priority === 'true',
-  };
-  console.log('😒',order)
+	//COMPOSE ORDER OBJECT
+	const order = { ...data, cart: JSON.parse(data.cart), priority: data.priority === 'on' };
+	// console.log(order);
 
-  //ERROR HANDLING FOR INPUTS
-  const errors = {};
-  if (!isValidPhone(order.phone))
-    errors.phone =
-      'Please give us your correct phone number. We might need it to contact you.';
-  if (Object.keys(errors).length) return errors; //IF VALID ERROR IS RETURNED TO ACTION AND DOES NOT PROCEED WOITH CREATE ORDER
+	// IF DATA IS NOT FINE....
+	// DATA QUALITY ASSURANCE - ERROR
+	const errors = {};
+	if (!isValidPhone(order.phone))
+		errors.phone = 'Please give us your correct phone number. We might need it to contact you.';
+	if (Object.keys(errors).length > 0) return errors;
 
-  //EXECUTE FETCHING FUNCTION IF EVERY THING PASSES W/NO ERROR
-  const newOrder = await createOrder(order); //Returns data so we have to await
-
-  //VERY IMPORTANT!!! AFTER CHECKOUT AND SUMMARY PAGE IS DISPLAYED, WE NEED TO GET RID OF (RESET) THE ORDER SUMMARY FOOTER. FOR THAT WE WOULD NEED ACCESS TO STORE STATE OUT OF THE COMPONENT. WHILE THIS IS NOT POSSIBLE OUT OF A COMPONENT, WE FORCEFULLY IMPORT STORE TO THIS COMPONENT AND USE DISPATCH BRUTEFORCE IN A REGULAR FUNCTION BODY. DO NOT USE TECHNIQUE WHENEVER POSSIBLE AS REDUX DISABLES SOME PERFORMANCE OPTIMIZATIONS TO ACHIEVE THIS.
-  store.dispatch(clearCart())
-
-  //REFLECT THE ORDERID ON THE URL
-  return redirect(`/order/${newOrder.id}`); //Provided by react-router function as we cant use useNavigate() inside regular functions...
+	//IF DATA IS FINE....
+	// POST FETCH NEW ORDER TO API IF DATA IS FINE
+	const newOrder = await createOrder(order);
+	// REDIRECT FUNCTION IS PROVIDED BY REACT-ROUTER TO NAVIGATE PROGRAMATICALLY WHEN USED OUTSIDE A REACT COMPONENT
+	return redirect(`/order/${newOrder.id}`);
 }
 
 export default CreateOrder;
