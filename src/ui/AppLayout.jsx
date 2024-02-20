@@ -6,28 +6,30 @@ import Header from './Header';
 import LoadingIndicator from './LoadingIndicator';
 
 function AppLayout() {
-	// PROVIDES STATE OF NAVIGATION REACT-ROUTER HOOK
-	const navigation = useNavigation();
-	// console.log(navigation);
-	/* {state: 'idle', location: undefined, formMethod: undefined, formAction: undefined, formEncType: undefined, ...}
-	 */
-	// Available states are : idle, loading , submitting
-	const isLoading = navigation.state === 'loading';
+  // PROVIDES STATE OF NAVIGATION REACT-ROUTER HOOK
+  const navigation = useNavigation();
+  // console.log(navigation);
+  /* {state: 'idle', location: undefined, formMethod: undefined, formAction: undefined, formEncType: undefined, ...}
+   */
+  // Available states are : idle, loading , submitting
+  const isLoading = navigation.state === 'loading';
 
-	return (
-		<div className="layout">
-			{isLoading && <LoadingIndicator />}
+  return (
+    <div className="grid h-screen grid-rows-[auto_1fr_auto]">
+      {isLoading && <LoadingIndicator />}
 
-			<Header />
+      <Header />
 
-			<main>
-				{/* Outlet renders the UI element for the current route */}
-				<Outlet />
-			</main>
+      <div className="overflow-scroll">
+        <main className="mx-auto max-w-3xl">
+          {/* Outlet renders the UI element for the current route */}
+          <Outlet />
+        </main>
+      </div>
 
-			<CartOverview />
-		</div>
-	);
+      <CartOverview />
+    </div>
+  );
 }
 
 export default AppLayout;
