@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearCart, getCart, getTotalCartPrice } from '../cart/cartSlice';
-import { getUser } from '../user/userSlice';
+import { fetchAddress, getUser } from '../user/userSlice';
 
 import { createOrder } from '../../services/apiRestaurant';
 import { formatCurrency } from '../../utils/helpers';
@@ -26,6 +26,9 @@ function CreateOrder() {
 
   // PROVIDES STATE OF NAVIGATION REACT-ROUTER HOOK
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
   // Available states are : idle, loading , submitting
   const isSubmitting = navigation.state === 'submitting';
 
@@ -47,6 +50,8 @@ function CreateOrder() {
       <h2 className="mb-8 text-xl font-semibold">
         Ready to order? Let&apos;s go!
       </h2>
+
+      <button onClick={() => dispatch(fetchAddress())}>Get position</button>
 
       {/* FORM IS A SPECIAL SUBSTITUTE COMPONENT PROVIDED BY REACT ROUTER */}
       {/* <Form method="POST" action="/order/new"> */}
