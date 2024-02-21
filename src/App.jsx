@@ -7,6 +7,7 @@ import CreateOrder, {
   action as createOrderAction,
 } from './features/order/CreateOrder';
 import Order, { loader as orderLoader } from './features/order/Order';
+import { action as updateOrderAction } from './features/order/UpdateOrder';
 import AppLayout from './ui/AppLayout';
 import Error from './ui/Error';
 
@@ -50,6 +51,8 @@ const router = createBrowserRouter([
         // > READ A SPECIFIC DATA FETCH API CALL
         loader: orderLoader,
         errorElement: <Error />,
+        // > Action function is smart enough to figure out that element is UpdateOrder.jsx which is a sub component of <Order/> component
+        action: updateOrderAction,
       },
     ],
   },

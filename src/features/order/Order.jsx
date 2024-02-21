@@ -12,6 +12,7 @@ import {
 } from '../../utils/helpers';
 
 import OrderItem from './OrderItem';
+import UpdateOrder from './UpdateOrder';
 
 function Order() {
   // > useLoaderData hook gets a hold of the loader object data @ route (App.jsx) which is provided by calling the async loader() fetch function provided out side the component.
@@ -96,6 +97,8 @@ function Order() {
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
+
+      {!priority && <UpdateOrder order={order} />}
     </div>
   );
 }
