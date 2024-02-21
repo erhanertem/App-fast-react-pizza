@@ -11,7 +11,7 @@ import { getUser } from '../user/userSlice';
 function Cart() {
   const dispatch = useDispatch();
   // const username = ((state) => state.user.username);
-  const username = useSelector(getUser);
+  const { username } = useSelector(getUser);
   const cart = useSelector(getCart);
   // console.log(cart);
 

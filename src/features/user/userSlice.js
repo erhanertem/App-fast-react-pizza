@@ -77,14 +77,16 @@ const userSlice = createSlice({
       })
       .addCase(fetchAddress.rejected, (state, action) => {
         state.status = 'error';
-        state.error = action.error.message;
+        // state.error = action.error.message;
+        state.error =
+          'There was a problem getting your address. Make sure to fill this field!';
       }),
 });
 
 // > DEFINE SELECTORS RELATED TO USER STATE
 // NOTE: CONSIDER 'RESELECT' LIBRARY IN ORDER TO INCREASE PERFORMANCE OF REDUX APP RATHER THAN MANUALLY CREATING ONE
 // IMPORTANT!!! ITS A CUSTOM TO DECLARE ALL HELPER FUNCTIONS STARTING WITH GET*****
-export const getUser = (state) => state.user.username;
+export const getUser = (state) => state.user;
 // IMPORTED BY PROPER COMPONENTS TO TRIGGER A SPECIFIED UPDATE VIA THESE ACTION CREATOR FUNCTIONS
 export const { updateName } = userSlice.actions;
 // THIS EXPORT IS USED TO SETUP OUR STORE
