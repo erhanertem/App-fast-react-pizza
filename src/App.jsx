@@ -39,7 +39,6 @@ const router = createBrowserRouter([
         element: <CreateOrder />,
         // POST request handled via this action fn
         action: createOrderAction,
-        errorElement: <Error />,
       },
       {
         path: '/order/:orderID',
