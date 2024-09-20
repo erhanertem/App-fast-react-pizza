@@ -19,6 +19,7 @@ function Menu() {
   );
 }
 
+// ESTABLISH LOADER FUNCTION HERE WHICH TO BE CALLED FROM ROUTE LOADER
 export async function loader() {
   const menu = await getMenu();
   return menu;

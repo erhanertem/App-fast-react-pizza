@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './ui/Home';
 import Menu, { loader as menuLoader } from './features/menu/Menu';
 import Cart from './features/cart/Cart';
-import Order from './features/order/Order';
+import Order, { loader as orderLoader } from './features/order/Order';
 import CreateOrder from './features/order/CreateOrder';
 import AppLayout from './ui/AppLayout';
 import Error from './ui/Error';
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
         element: <Menu />,
         // NOTE: Since fetching occurs in this child route, we may encounter error. Instead of destroying the entire layout, we may keep current UI and specify the error message here by specifying the errorElement field in place
         errorElement: <Error />,
-        // NOTE: Provide a loader middleware function to fetch menu data - The fetch function is kept @ Menu component for tidying purposes, however the menuLoader(loader function isnide Menu component) is fired here - The data provided by the menuLoader now could be consuemd within Menu component via useLoaderData RR hook
+        // NOTE: Provide a loader middleware function to fetch menu data - The fetch function is kept @ Menu component for tidying purposes, however the menuLoader(loader function isnide Menu component) is fired here - The data provided by the menuLoader now could be consumed within Menu component via useLoaderData RR hook
         loader: menuLoader,
       },
       {
@@ -39,8 +39,10 @@ const router = createBrowserRouter([
         element: <CreateOrder />,
       },
       {
-        path: '/order/:id',
+        path: '/order/:orderID',
         element: <Order />,
+        // NOTE: Provide a loader middleware function to fetch order data with a orderID param - The fetch function is kept @ Order component for tidying purposes, however the orderLoader(loader function isnide Order component) is fired here - The data provided by the orderLoader now could be consumed within Order component via useLoaderData RR hook
+        loader: orderLoader,
       },
     ],
   },
