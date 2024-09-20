@@ -43,6 +43,7 @@ const router = createBrowserRouter([
         element: <Order />,
         // NOTE: Provide a loader middleware function to fetch order data with a orderID param - The fetch function is kept @ Order component for tidying purposes, however the orderLoader(loader function isnide Order component) is fired here - The data provided by the orderLoader now could be consumed within Order component via useLoaderData RR hook
         loader: orderLoader,
+        errorElement: <Error />,
       },
     ],
   },
