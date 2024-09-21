@@ -16,10 +16,12 @@ function AppLayout() {
 
       <Header />
 
-      <main className="overflow-scroll">
-        {/* Inserts component content of the corresponding endpoint element in the child routes definition @ router */}
-        <Outlet />
-      </main>
+      <div className="overflow-auto">
+        <main className="mx-auto max-w-3xl">
+          {/* Inserts component content of the corresponding endpoint element in the child routes definition @ router */}
+          <Outlet />
+        </main>
+      </div>
 
       <CartOverview />
     </div>
