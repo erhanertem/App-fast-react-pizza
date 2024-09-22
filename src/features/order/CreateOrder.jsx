@@ -55,13 +55,23 @@ function CreateOrder() {
       >
         <div>
           <label>First Name</label>
-          <input type="text" name="customer" required />
+          <input
+            className="input" // Custom tailwind class
+            type="text"
+            name="customer"
+            required
+          />
         </div>
 
         <div>
           <label>Phone number</label>
           <div>
-            <input type="tel" name="phone" required />
+            <input
+              className="input" // Custom tailwind class
+              type="tel"
+              name="phone"
+              required
+            />
           </div>
           {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
@@ -70,7 +80,7 @@ function CreateOrder() {
           <label>Address</label>
           <div>
             <input
-              className="w-full rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 md:px-6 md:py-3"
+              className="input" // Custom tailwind class
               type="text"
               name="address"
               required
