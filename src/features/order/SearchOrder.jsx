@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SearchOrder() {
-  const [query, setQuery] = useState("IIDSAT");
+  const [query, setQuery] = useState("");
 
   const navigate = useNavigate();
 
