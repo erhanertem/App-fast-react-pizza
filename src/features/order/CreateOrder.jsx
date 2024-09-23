@@ -46,42 +46,48 @@ function CreateOrder() {
   const cart = fakeCart;
 
   return (
-    <div>
-      <h2>Ready to order? Let's go!</h2>
+    <div className="px-4 py-6">
+      <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
       {/* Instead of usign regular form element, we have to use RR's Form component to make POST requests work with RR actions */}
       <Form
         method="POST"
         // You may implicitly specify this action route or RR would handle the closest route automatically
         // action="/order/new"
       >
-        <div>
-          <label>First Name</label>
-          <input
-            className="input" // Custom tailwind class
-            type="text"
-            name="customer"
-            required
-          />
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">First Name</label>
+          <div className="grow">
+            <input
+              className="input w-full" // Custom tailwind class
+              type="text"
+              name="customer"
+              required
+            />
+          </div>
         </div>
 
-        <div>
-          <label>Phone number</label>
-          <div>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start">
+          <label className="sm:basis-40 sm:pt-2">Phone number</label>
+          <div className="grow">
             <input
-              className="input" // Custom tailwind class
+              className="input w-full" // Custom tailwind class
               type="tel"
               name="phone"
               required
             />
+            {formErrors?.phone && (
+              <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
+                {formErrors.phone}
+              </p>
+            )}
           </div>
-          {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
 
-        <div>
-          <label>Address</label>
-          <div>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Address</label>
+          <div className="grow">
             <input
-              className="input" // Custom tailwind class
+              className="input w-full" // Custom tailwind class
               type="text"
               name="address"
               required
@@ -89,7 +95,7 @@ function CreateOrder() {
           </div>
         </div>
 
-        <div>
+        <div className="mb-12 flex items-center gap-5">
           <input
             className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 focus:ring-offset-2"
             type="checkbox"
@@ -98,7 +104,9 @@ function CreateOrder() {
             // value={withPriority}
             // onChange={(e) => setWithPriority(e.target.checked)}
           />
-          <label htmlFor="priority">Want to yo give your order priority?</label>
+          <label className="font-medium" htmlFor="priority">
+            Want to yo give your order priority?
+          </label>
         </div>
 
         <div>
