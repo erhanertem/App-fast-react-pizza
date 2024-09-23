@@ -103,7 +103,7 @@ function CreateOrder() {
 
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <Button disabled={isSubmitting}>
+          <Button type="primary" disabled={isSubmitting}>
             {isSubmitting ? "Placing order..." : "Order now"}
           </Button>
         </div>
@@ -162,13 +162,13 @@ export async function action({ request }) {
     return errors;
   }
 
-  // const newOrder = await createOrder(order);
+  const newOrder = await createOrder(order);
   // console.log(newOrder);
 
   // ALWAYS RR LOADER OR ACTION FUNCTIONS REQUIRE A RETURN EVENTHOUGH WE DONT NEED IT
-  return null;
+  // return null;
   // WE CANT USE USENAVIGATE IN A FUNCTION TO PROGRAMMATICALLY NAVIGATE TO AN ENDPOINT, THEY ARE FOR REACT COMPONENTS. HOWEVER FOR CASUAL FUNCTIONS RR PROVIDES REDIRECT FUNCTION AS A PAR SUBSTITUTE
-  // return redirect(`/order/${newOrder.id}`);
+  return redirect(`/order/${newOrder.id}`);
 }
 
 export default CreateOrder;
