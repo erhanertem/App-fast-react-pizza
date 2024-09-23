@@ -1,3 +1,4 @@
+/*
 function getPosition() {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -19,3 +20,26 @@ async function fetchAddress() {
   // 3) Then we return an object with the data that we are interested in
   return { position, address };
 }
+
+*/
+
+import { createSlice } from "@reduxjs/toolkit";
+
+// #1. SET INITIAL STATE OBJECT - CREATE A SLICE OF GLOBAL UI STATE
+const initialState = {
+  username: "",
+};
+// #2. SETUP RTK SLICER (REDUCER FUNCTION + ACTION CREATORS)
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    updateName(state, action) {
+      state.username = action.payload;
+    },
+  },
+});
+// #3. EXPORT SYNC ACTION CREATOR FUNCTIONS - USED BY COMPONENT EVENTHANDLERS
+export const { updateName } = userSlice.actions;
+// #4. EXPORT REDUCER - USED BY STORE FOR CONFIGURING THE RTK STORE
+export default userSlice.reducer;
