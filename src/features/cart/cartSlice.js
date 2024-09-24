@@ -63,3 +63,5 @@ export const getTotalCartPrice = (state) =>
   state.cart.cart
     .reduce((acc, currItem) => acc + currItem.totalPrice, 0)
     .toFixed(2);
+export const getCart = (state) => state.cart.cart;
+export const getUsername = (state) => state.user.username;
