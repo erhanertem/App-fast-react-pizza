@@ -59,6 +59,8 @@ export default cartSlice.reducer;
 // COMPLEX RTK STORE USESELECTOR READ FUNCTIONS KEPT HERE - convention is to start these functions with get
 export const getTotalCartQuantity = (state) =>
   state.cart.cart.reduce((acc, currItem) => acc + currItem.quantity, 0);
+export const getCurrentQuantityById = (id) => (state) =>
+  state.cart.cart.find((item) => item.pizzaId === id)?.quantity ?? 0;
 export const getTotalCartPrice = (state) =>
   state.cart.cart
     .reduce((acc, currItem) => acc + currItem.totalPrice, 0)

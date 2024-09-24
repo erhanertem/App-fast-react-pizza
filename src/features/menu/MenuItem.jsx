@@ -1,12 +1,17 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../ui/Button";
 import { formatCurrency } from "../../utils/helpers";
-import { addItem } from "../cart/cartSlice";
+import { addItem, getCurrentQuantityById } from "../cart/cartSlice";
+import DeleteItem from "../cart/DeleteItem";
 
 function MenuItem({ pizza }) {
   // #1. Create a dispatch for updating RTK store
   const dispatch = useDispatch();
+
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+  // NOTE: READ THE DATA FROM CART STATE, IF HTERE IS A QUANTITY ON A CART ITEM, INTERCHANGIBLY SHOW DELETE / ADD TO CART BUTTONS
+  const currentCartItemQuantity = useSelector(getCurrentQuantityById(id));
+  const isInCart = currentCartItemQuantity > 0;
 
   function handleAddtoCart() {
     // console.log(id);
@@ -41,7 +46,10 @@ function MenuItem({ pizza }) {
               Sold out
             </p>
           )}
-          {!soldOut && (
+
+          {isInCart && <DeleteItem pizzaId={id} />}
+
+          {!soldOut && !isInCart && (
             <Button type="small" onClick={handleAddtoCart}>
               Add to cart
             </Button>
