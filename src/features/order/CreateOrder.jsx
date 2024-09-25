@@ -3,7 +3,7 @@
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   clearCart,
   getCart,
@@ -14,6 +14,7 @@ import EmptyCart from "../cart/EmptyCart";
 import store from "../../store";
 import { formatCurrency } from "./../../utils/helpers";
 import { useState } from "react";
+import { fetchAddress } from "../user/userSlice";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -47,10 +48,8 @@ const isValidPhone = (str) =>
 
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState(false);
-
   const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
-
+  const dispatch = useDispatch();
   // DISPLAY RETURNED DATA FROM THE ACTION FUNCTION - TYPICAL FOR FORM FIELD ERRORS
   const formErrors = useActionData();
 
@@ -59,8 +58,11 @@ function CreateOrder() {
   const username = useSelector(getUsername);
   const cart = useSelector(getCart);
   const totalCartPrice = useSelector(getTotalCartPrice);
+
+  // DERIVED STATES
   const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0;
   const totalPrice = totalCartPrice + priorityPrice;
+  const isSubmitting = navigation.state === "submitting";
 
   // GUARD CLAUSE
   if (!cart.length) return <EmptyCart />;
@@ -68,6 +70,9 @@ function CreateOrder() {
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
+
+      <button onClick={() => dispatch(fetchAddress())}>Get Position</button>
+
       {/* Instead of usign regular form element, we have to use RR's Form component to make POST requests work with RR actions */}
       <Form
         method="POST"
