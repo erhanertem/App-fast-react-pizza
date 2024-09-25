@@ -22,6 +22,7 @@ const isValidPhone = (str) =>
   );
 
 function CreateOrder() {
+  const [addressFill, setAddressFill] = useState("");
   const [withPriority, setWithPriority] = useState(false);
   // READ username FROM RTK STORE
   const {
@@ -29,6 +30,7 @@ function CreateOrder() {
     status: addressStatus,
     position,
     address,
+    error: addressError,
   } = useSelector(getUser);
   const isLoadingAddress = addressStatus === "loading"; // Returns true when loading
 
@@ -98,23 +100,32 @@ function CreateOrder() {
               disabled={isLoadingAddress}
               defaultValue={address}
               required
+              onChange={(e) => {
+                e.preventDefault();
+                setAddressFill(e.target.value);
+              }}
             />
-            {!position.latitude && !position.longitude && (
-              <span className="absolute z-50 max-md:right-[1px] max-md:top-[2.5px] max-sm:right-[3px] max-sm:top-[34.5px] md:right-[4.5px] md:top-[5px]">
-                <Button
-                  type="small"
-                  disabled={isLoadingAddress}
-                  onClick={(e) => {
-                    // Clicking this as its inside the form element will trigger form submission so we neeed to prevent this
-                    e.preventDefault();
-                    dispatch(fetchAddress());
-                  }}
-                >
-                  Get Position
-                </Button>
-              </span>
+            {addressStatus === "error" && addressFill === "" && (
+              <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
+                {addressError}
+              </p>
             )}
           </div>
+          {!position.latitude && !position.longitude && (
+            <span className="absolute z-50 max-md:right-[1px] max-md:top-[2.5px] max-sm:right-[3px] max-sm:top-[34.5px] md:right-[4.5px] md:top-[5px]">
+              <Button
+                type="small"
+                disabled={isLoadingAddress}
+                onClick={(e) => {
+                  // Clicking this as its inside the form element will trigger form submission so we neeed to prevent this
+                  e.preventDefault();
+                  dispatch(fetchAddress());
+                }}
+              >
+                Get Position
+              </Button>
+            </span>
+          )}
         </div>
 
         <div className="mb-12 flex items-center gap-5">
@@ -132,8 +143,20 @@ function CreateOrder() {
         </div>
 
         <div>
+          {/* Pass in thru priority stamped cart data */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <Button type="primary" disabled={isSubmitting}>
+          {/* Pass in thru customer GPS position if there is any (if get position button is clicked) */}
+          <input
+            type="hidden"
+            name="position"
+            value={
+              position.longitude && position.latitude
+                ? `${position.latitude},${position.longitude}`
+                : ""
+            }
+          />
+
+          <Button type="primary" disabled={isSubmitting || isLoadingAddress}>
             {isSubmitting
               ? "Placing order..."
               : `Order now for ${formatCurrency(totalPrice)}`}
@@ -182,6 +205,7 @@ export async function action({ request }) {
     cart: JSON.parse(data.cart),
     priority: data.priority === "true", // Priority symbol registered based on falsy or truthy output
   };
+  // console.log(order);
 
   // GUARD CLAUSE - check for required fields consistency
   const errors = {};
@@ -193,16 +217,16 @@ export async function action({ request }) {
     return errors;
   }
 
-  const newOrder = await createOrder(order);
-  // console.log(newOrder);
-
-  // ALWAYS RR LOADER OR ACTION FUNCTIONS REQUIRE A RETURN EVENTHOUGH WE DONT NEED IT
+  // // FOR TESTING PURPOSES
+  // // ALWAYS RR LOADER OR ACTION FUNCTIONS REQUIRE A RETURN EVENTHOUGH WE DONT NEED IT
   // return null;
-  // WE CANT USE USENAVIGATE IN A FUNCTION TO PROGRAMMATICALLY NAVIGATE TO AN ENDPOINT, THEY ARE FOR REACT COMPONENTS. HOWEVER FOR CASUAL FUNCTIONS RR PROVIDES REDIRECT FUNCTION AS A PAR SUBSTITUTE
 
+  // If everything is okay, create a new order and redirect
+  const newOrder = await createOrder(order);
+  console.log(newOrder);
   // NOTE: MANUALLY TRIGGER AN ACTION FUNCTION FROM THE STORE WHEN NOT INSIDE JSX BODY - HACKY BUT NOT RECOMMENDED - SO USE IT WISELY
   store.dispatch(clearCart());
-
+  // WE CANT USE USENAVIGATE IN A FUNCTION TO PROGRAMMATICALLY NAVIGATE TO AN ENDPOINT, THEY ARE FOR REACT COMPONENTS. HOWEVER FOR CASUAL FUNCTIONS RR PROVIDES REDIRECT FUNCTION AS A PAR SUBSTITUTE
   return redirect(`/order/${newOrder.id}`);
 }
 
