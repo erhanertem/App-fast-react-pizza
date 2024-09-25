@@ -1,20 +1,19 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/no-unescaped-entities */
-import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
-import { createOrder } from "../../services/apiRestaurant";
-import Button from "../../ui/Button";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearCart,
-  getCart,
-  getTotalCartPrice,
-  getUsername,
-} from "../cart/cartSlice";
-import EmptyCart from "../cart/EmptyCart";
-import store from "../../store";
-import { formatCurrency } from "./../../utils/helpers";
 import { useState } from "react";
-import { fetchAddress } from "../user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
+
+import store from "../../store";
+import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice";
+import { fetchAddress, getUser } from "../user/userSlice";
+
+import Button from "../../ui/Button";
+import EmptyCart from "../cart/EmptyCart";
+
+import { formatCurrency } from "./../../utils/helpers";
+import { createOrder } from "../../services/apiRestaurant";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -22,47 +21,29 @@ const isValidPhone = (str) =>
     str,
   );
 
-// const fakeCart = [
-//   {
-//     pizzaId: 12,
-//     name: "Mediterranean",
-//     quantity: 2,
-//     unitPrice: 16,
-//     totalPrice: 32,
-//   },
-//   {
-//     pizzaId: 6,
-//     name: "Vegetale",
-//     quantity: 1,
-//     unitPrice: 13,
-//     totalPrice: 13,
-//   },
-//   {
-//     pizzaId: 11,
-//     name: "Spinach and Mushroom",
-//     quantity: 1,
-//     unitPrice: 15,
-//     totalPrice: 15,
-//   },
-// ];
-
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState(false);
+  // READ username FROM RTK STORE
+  const {
+    username,
+    status: addressStatus,
+    position,
+    address,
+  } = useSelector(getUser);
+  const isLoadingAddress = addressStatus === "loading"; // Returns true when loading
+
   const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+
   const dispatch = useDispatch();
   // DISPLAY RETURNED DATA FROM THE ACTION FUNCTION - TYPICAL FOR FORM FIELD ERRORS
   const formErrors = useActionData();
 
-  // READ username FROM RTK STORE
-  // const cart = fakeCart;
-  const username = useSelector(getUsername);
   const cart = useSelector(getCart);
   const totalCartPrice = useSelector(getTotalCartPrice);
-
   // DERIVED STATES
   const priorityPrice = withPriority ? totalCartPrice * 0.2 : 0;
   const totalPrice = totalCartPrice + priorityPrice;
-  const isSubmitting = navigation.state === "submitting";
 
   // GUARD CLAUSE
   if (!cart.length) return <EmptyCart />;
@@ -70,8 +51,6 @@ function CreateOrder() {
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
-
-      <button onClick={() => dispatch(fetchAddress())}>Get Position</button>
 
       {/* Instead of usign regular form element, we have to use RR's Form component to make POST requests work with RR actions */}
       <Form
@@ -109,15 +88,32 @@ function CreateOrder() {
           </div>
         </div>
 
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="relative mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
           <div className="grow">
             <input
               className="input w-full" // Custom tailwind class
               type="text"
               name="address"
+              disabled={isLoadingAddress}
+              defaultValue={address}
               required
             />
+            {!position.latitude && !position.longitude && (
+              <span className="absolute z-50 max-md:right-[1px] max-md:top-[2.5px] max-sm:right-[3px] max-sm:top-[34.5px] md:right-[4.5px] md:top-[5px]">
+                <Button
+                  type="small"
+                  disabled={isLoadingAddress}
+                  onClick={(e) => {
+                    // Clicking this as its inside the form element will trigger form submission so we neeed to prevent this
+                    e.preventDefault();
+                    dispatch(fetchAddress());
+                  }}
+                >
+                  Get Position
+                </Button>
+              </span>
+            )}
           </div>
         </div>
 
