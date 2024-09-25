@@ -58,23 +58,26 @@ const userSlice = createSlice({
     updateName(state, action) {
       state.username = action.payload;
     },
-    extraReducers: (builder) =>
-      builder
-        .addCase(fetchAddress.pending, (state) => {
-          state.status = "loading";
-        })
-        .addCase(fetchAddress.fullfilled, (state, action) => {
-          state.status = "idle";
-          state.position = action.payload.position;
-          state.address = action.payload.address;
-        })
-        .addCase(fetchAddress.rejected, (state, action) => {
-          state.status = "error";
-          state.error = action.error.message;
-        }),
   },
+  extraReducers: (builder) =>
+    builder
+      .addCase(fetchAddress.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAddress.fulfilled, (state, action) => {
+        state.position = action.payload.position;
+        state.address = action.payload.address;
+        state.status = "idle";
+      })
+      .addCase(fetchAddress.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.status = "error";
+      }),
 });
 // #3. EXPORT SYNC ACTION CREATOR FUNCTIONS - USED BY COMPONENT EVENTHANDLERS
 export const { updateName } = userSlice.actions;
 // #4. EXPORT REDUCER - USED BY STORE FOR CONFIGURING THE RTK STORE
 export default userSlice.reducer;
+
+// COMPLEX RTK STORE USESELECTOR READ FUNCTIONS KEPT HERE - convention is to start these functions with get
+export const getUser = (state) => state.user;
