@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 // Test ID: IIDSAT
-import { useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import { useFetcher, useLoaderData } from "react-router-dom";
 import { getOrder } from "../../services/apiRestaurant";
 import {
   calcMinutesLeft,
@@ -11,7 +12,21 @@ import OrderItem from "./OrderItem";
 
 function Order() {
   const order = useLoaderData();
-  // console.log(order);
+
+  // FETCH DATA WITHOUT NAVIGATING TO THE ACTUAL PAGE via USEFETCHER RR HOOK
+  const fetcher = useFetcher();
+  //  WE WANT TO MAKE USE OF LOADER FUNCTION @ /MENU ENDPOINT W/OUT NAVIGATING TO IT VIA RR USEFETCHER HOOK
+  useEffect(
+    function () {
+      // GUARD CLAUSE
+      // MAKE SURE THERE IS NO DATA FETCHED YET FROM THE LOADER FN + LOADER FN IS NOT @ LOADING STATE
+      if (!fetcher.data && fetcher.state === "idle") {
+        // This function loads the data from this endpoint and stores it inside fetcher.data
+        fetcher.load("/menu");
+      }
+    },
+    [fetcher],
+  );
 
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
@@ -55,7 +70,15 @@ function Order() {
 
       <ul className="divide-y divide-stone-200 border-b border-t">
         {cart.map((item) => (
-          <OrderItem key={item.pizzaId} item={item} />
+          <OrderItem
+            key={item.pizzaId}
+            item={item}
+            isLoadingIngredients={fetcher.state === "loading"}
+            ingredients={
+              fetcher?.data?.find((el) => el.id === item.pizzaId)
+                ?.ingredients ?? []
+            }
+          />
         ))}
       </ul>
 
