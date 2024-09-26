@@ -1,11 +1,14 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './ui/Home';
-import Menu, { loader as menuLoader } from './features/menu/Menu';
-import Cart from './features/cart/Cart';
-import Order, { loader as orderLoader } from './features/order/Order';
-import CreateOrder, { action as createOrderAction } from './features/order/CreateOrder';
-import AppLayout from './ui/AppLayout';
-import Error from './ui/Error';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./ui/Home";
+import Menu, { loader as menuLoader } from "./features/menu/Menu";
+import Cart from "./features/cart/Cart";
+import Order, { loader as orderLoader } from "./features/order/Order";
+import CreateOrder, {
+  action as createOrderAction,
+} from "./features/order/CreateOrder";
+import { action as updateOrderPriorityAction } from "./features/order/UpdateOrderPriority";
+import AppLayout from "./ui/AppLayout";
+import Error from "./ui/Error";
 
 // #1. CREATE LIST OF FRONT-END ENDPOINTS AND SPA PAGE JSX COMPONENTS
 // NOTE: This is imperative way of declaring routes comapred to traditional route declaration inside JSX via router components. Here all routes are declared outside the JSX body and listed inside an array object. This is an imperative setup to enable data loading , or data fetching with react-router library.
@@ -19,11 +22,11 @@ const router = createBrowserRouter([
     // Define nested routes here
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Home />,
       },
       {
-        path: '/menu',
+        path: "/menu",
         element: <Menu />,
         // NOTE: Since fetching occurs in this child route, we may encounter error. Instead of destroying the entire layout, we may keep current UI and specify the error message here by specifying the errorElement field in place
         errorElement: <Error />,
@@ -31,20 +34,21 @@ const router = createBrowserRouter([
         loader: menuLoader,
       },
       {
-        path: '/cart',
+        path: "/cart",
         element: <Cart />,
       },
       {
-        path: '/order/new',
+        path: "/order/new",
         element: <CreateOrder />,
         // POST request handled via this action fn
         action: createOrderAction,
       },
       {
-        path: '/order/:orderID',
+        path: "/order/:orderID",
         element: <Order />,
         // NOTE: Provide a loader middleware function to fetch order data with a orderID param - The fetch function is kept @ Order component for tidying purposes, however the orderLoader(loader function isnide Order component) is fired here - The data provided by the orderLoader now could be consumed within Order component via useLoaderData RR hook
         loader: orderLoader,
+        action: updateOrderPriorityAction,
         errorElement: <Error />,
       },
     ],
