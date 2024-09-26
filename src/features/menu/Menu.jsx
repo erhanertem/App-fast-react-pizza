@@ -1,11 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useLoaderData } from 'react-router-dom';
-import { getMenu } from '../../services/apiRestaurant';
-
-import MenuItem from './MenuItem';
+import { useLoaderData } from "react-router-dom";
+import { getMenu } from "../../services/apiRestaurant";
+import MenuItem from "./MenuItem";
 
 function Menu() {
-  // REACT-ROUTER HOOK THAT GATHERS THE LOADER DATA FROM THE CORRESPONDING ROUTE @ ROUTER OBJECT
   const menu = useLoaderData();
   // console.log(menu);
 
@@ -18,10 +16,7 @@ function Menu() {
   );
 }
 
-// ASYNC API FETCHING
-// #1. Create a loader function
-// #2. Provide the loader @ router
-// #3.Provide the data to the page
+// ESTABLISH LOADER FUNCTION HERE WHICH TO BE CALLED FROM ROUTE LOADER
 export async function loader() {
   const menu = await getMenu();
   return menu;

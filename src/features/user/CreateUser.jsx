@@ -1,28 +1,26 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-
-import Button from '../../ui/Button';
-
-import { updateName } from './userSlice';
+import { useState } from "react";
+import Button from "../../ui/Button";
+import { useDispatch } from "react-redux";
+import { updateName } from "./userSlice";
+import { useNavigate } from "react-router-dom";
 
 function CreateUser() {
-  const [username, setUsername] = useState('');
+  // NOTE: Temp user inputs are stored within the component. Storing them @ RTK global UI store is a very bad idea.
+  const [username, setUsername] = useState("");
+  // #1. Create a dispatch for updating RTK store
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // REDUX STORE SHOULD BE ONLY CHANGED WHEN WE GOT THE FINAL NAME - THIS IS THE PLACE WHERE WE UPDATE THE REDUX STATE
   function handleSubmit(e) {
     e.preventDefault();
 
-    // GUARD CLAUSE - PREVENT INADVERTANT BLANK ENTRY
+    // NOTE: We only store this final input @ RTK store
+    // GUARD CLAUSE
     if (!username) return;
-
-    // > CORE LOGIC
-    // Update REDUX STORE
+    // Dispatch an action creator function automatically created for us @ userSlice.js - this action creator function takes in payload argument - see updateName reducer
     dispatch(updateName(username));
-    // Programmaticaly NAVIGATE TO menu
-    navigate('/menu');
+    // Programmatically navigate to '/menu' endpoint
+    navigate("/menu");
   }
 
   return (
@@ -32,15 +30,14 @@ function CreateUser() {
       </p>
 
       <input
+        className="input mb-8 w-72"
         type="text"
         placeholder="Your full name"
         value={username}
-        // IMPORTANT!! WE DONT CHANGE THE REDUX STATE DIRECTLY. WE DECLARE A LOCAL USESTATE TO UPDATE THE STATE LOCALLY. ONCE WE HAVE THE FINAL NAME FOR SUBMISSION TO REDUX WE GOT TO HANDLE @ HANDLESUBMIT FUNCTION
         onChange={(e) => setUsername(e.target.value)}
-        className="input mb-8 w-72"
       />
 
-      {username !== '' && (
+      {username !== "" && (
         <div>
           <Button type="primary">Start ordering</Button>
         </div>

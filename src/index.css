@@ -1,13 +1,11 @@
-/* In order to direct VSCODE to use tailwindcss for *.css files, provide VSCODE overrite setting @.vscode folder*/
+/* Add the Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* TAILWIND LAYER DIRECTIVE TO CREATE CUSTOM CLASSES */
-/* input custom class being used @ CreateOrder inputs */
 @layer components {
   .input {
-    @apply w-full rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 md:px-6 md:py-3;
+    @apply rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 md:px-6 md:py-3;
   }
 
   /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
@@ -15,7 +13,8 @@
     width: 45px;
     aspect-ratio: 0.75;
     /* --c: no-repeat linear-gradient(#333 0 0); */
-    --c: no-repeat linear-gradient(theme(colors.stone.800) 0 0);
+    --c: no-repeat linear-gradient(theme(colors.stone.600) 0 0);
+
     background:
       var(--c) 0% 50%,
       var(--c) 50% 50%,

@@ -1,0 +1,1 @@
+This folder is for other components that do not fall under any features category. Just any components such as buttons, etc that do not create any side effects.

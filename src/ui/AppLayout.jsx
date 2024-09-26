@@ -1,28 +1,24 @@
-// ALWAYS VISIBLE COMPONENT THRUOUT THE APP
-
-import { Outlet, useNavigation } from 'react-router-dom';
-import CartOverview from '../features/cart/CartOverview';
-import Header from './Header';
-import LoadingIndicator from './LoadingIndicator';
+import Header from "./Header";
+import CartOverview from "./../features/cart/CartOverview";
+import { Outlet, useNavigation } from "react-router-dom";
+import Loader from "./Loader";
 
 function AppLayout() {
-  // PROVIDES STATE OF NAVIGATION REACT-ROUTER HOOK
+  // THIS RR NAVIGATION STATE IS UNIVERSAL AND IS HELPFULL FOR LOADING STATE ANIMATIONS
   const navigation = useNavigation();
   // console.log(navigation);
-  /* {state: 'idle', location: undefined, formMethod: undefined, formAction: undefined, formEncType: undefined, ...}
-   */
-  // Available states are : idle, loading , submitting
-  const isLoading = navigation.state === 'loading';
+  // NAVIGATIUON STATE IS EITHER IDLE|LOADING
+  const isLoading = navigation.state === "loading";
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr_auto]">
-      {isLoading && <LoadingIndicator />}
+      {isLoading && <Loader />}
 
       <Header />
 
-      <div className="overflow-scroll">
+      <div className="overflow-auto">
         <main className="mx-auto max-w-3xl">
-          {/* Outlet renders the UI element for the current route */}
+          {/* Inserts component content of the corresponding endpoint element in the child routes definition @ router */}
           <Outlet />
         </main>
       </div>

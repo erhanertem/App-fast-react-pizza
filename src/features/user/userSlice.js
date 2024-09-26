@@ -1,29 +1,32 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getAddress } from '../../services/apiGeocoding';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAddress } from "../../services/apiGeocoding";
 
+// --> RTK NATIVE ASYNC THUNK MIDDLEWARE CREATION
+/*
+This thunk function creates additional 3 action types :
+1. Fullfilled state
+2. Pending state
+3. Rejected state
+*/
+// UTILITY FUNCTION
 function getPosition() {
-  // GEOLOCATION ASYNC API AND NEEDS TO BE PROMISIFIED TO BE USED WITH ASYNC/AWAIT COMPOSITIONS
+  const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+
   return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
+    navigator.geolocation.getCurrentPosition(resolve, reject, options);
   });
 }
-
-// ***************************************************************
-/* CREATEASYNC THUNK WILL YIELD THREE ADDITONAL ACTION TYPES: 
-1. PENDING
-2. FULFILLED
-3. REJECTED
-WHICH SHOULD BE HANDLED IN THE REDUCER
-*/
+// EXPORT NATIVE RTK THUNK FUNCTION
 export const fetchAddress = createAsyncThunk(
-  // #1. ACTION TYPE NAME
-  // NOTE: WE WILL NEVER USE THIS ACTION TYPE NAME BUT RTK NEEDS IT TO CALL THE ANONYMOUS FUNCTION INTERNALLY
-  'user/fetchAddres',
-  // #2. ASYNC ANONYMOUS FUNCTION TO CALL
+  // > #1. ACTION TYPE - 'feature name/action type name'
+  // NOTE: REDUX NEEDS THIS FOR INTERNAL USE AND WILL NEVER BE USED BY US!
+  // NOTE: By convention action function name starts with fetch... Do not use something that starts with get...It's reserved internally
+  "user/fetchAddress",
+  // > #2. ACTUAL ASYNC THUNK FUNCTION WE WANT TO RUN
   async function () {
     // 1) We get the user's geolocation position
     const positionObj = await getPosition();
-    console.log(positionObj);
+    console.log("positionObj :", positionObj);
     const position = {
       latitude: positionObj.coords.latitude,
       longitude: positionObj.coords.longitude,
@@ -34,60 +37,49 @@ export const fetchAddress = createAsyncThunk(
     const address = `${addressObj?.locality}, ${addressObj?.city} ${addressObj?.postcode}, ${addressObj?.countryName}`;
 
     // 3) Then we return an object with the data that we are interested in
-    // > Becomes the payload of fulfilled state
+    // > #3. BECOMES THE PAYLOAD OF FULLFILLED STATE
     return { position, address };
   },
 );
-// ***************************************************************
 
-//CONSTRUCT REDUX
-
-// #1. CREATE INITIAL STATE
+// #1. SET INITIAL STATE OBJECT - CREATE A SLICE OF GLOBAL UI STATE
 const initialState = {
-  username: '',
-  // ASYNC REDUX THUNK RELATED STATES
-  status: 'idle',
+  username: "",
+  status: "idle",
   position: {},
-  address: '',
-  error: '',
+  address: "",
+  error: "",
 };
-// #2. CREATE USER SLICE
+// #2. SETUP RTK SLICER (REDUCER FUNCTION + ACTION CREATORS)
 const userSlice = createSlice({
-  // #2.1 NAME OF THE SLICE FEATURE
-  name: 'user',
-  // #2.2 PROVIDE INITIAL STATE
+  name: "user",
   initialState,
-  // #2.3 DECLARE REDUCERS
   reducers: {
-    // #2.3.1 DECLARE ACTION CREATOR FOR STATE UPDATE
     updateName(state, action) {
       state.username = action.payload;
     },
   },
-  // #2.4 HANDLE NATIVE createAsyncThunk MIDDLEWARE
   extraReducers: (builder) =>
     builder
-      .addCase(fetchAddress.pending, (state, action) => {
-        state.status = 'loading';
+      .addCase(fetchAddress.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(fetchAddress.fulfilled, (state, action) => {
-        state.status = 'idle';
         state.position = action.payload.position;
         state.address = action.payload.address;
+        state.status = "idle";
       })
       .addCase(fetchAddress.rejected, (state, action) => {
-        state.status = 'error';
         // state.error = action.error.message;
         state.error =
-          'There was a problem getting your address. Make sure to fill this field!';
+          "There was a problem getting your address. Make sure to fill this field!";
+        state.status = "error";
       }),
 });
-
-// > DEFINE SELECTORS RELATED TO USER STATE
-// NOTE: CONSIDER 'RESELECT' LIBRARY IN ORDER TO INCREASE PERFORMANCE OF REDUX APP RATHER THAN MANUALLY CREATING ONE
-// IMPORTANT!!! ITS A CUSTOM TO DECLARE ALL HELPER FUNCTIONS STARTING WITH GET*****
-export const getUser = (state) => state.user;
-// IMPORTED BY PROPER COMPONENTS TO TRIGGER A SPECIFIED UPDATE VIA THESE ACTION CREATOR FUNCTIONS
+// #3. EXPORT SYNC ACTION CREATOR FUNCTIONS - USED BY COMPONENT EVENTHANDLERS
 export const { updateName } = userSlice.actions;
-// THIS EXPORT IS USED TO SETUP OUR STORE
+// #4. EXPORT REDUCER - USED BY STORE FOR CONFIGURING THE RTK STORE
 export default userSlice.reducer;
+
+// COMPLEX RTK STORE USESELECTOR READ FUNCTIONS KEPT HERE - convention is to start these functions with get
+export const getUser = (state) => state.user;

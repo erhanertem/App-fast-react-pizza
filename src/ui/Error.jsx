@@ -1,14 +1,10 @@
-// import { useNavigate, useRouteError } from 'react-router-dom';
-import { useRouteError } from 'react-router-dom';
-
-import LinkButton from './LinkButton';
+import { useRouteError } from "react-router-dom";
+import LinkButton from "./LinkButton";
 
 function Error() {
-  //   // REACT ROUTER PROGRAMMATIC NAVIGATION HOOK
-  //   const navigate = useNavigate();
-  // REACT ROUTER HOOK THAT PROVIDES THE ERROR MESSAGE HITTING THE ERRORELEMENT IN THE ROUTER
+  // NOTE: SINCE THIS COMPONENT IS THE SPECIFIED ONE IN THE ERRORELEMENT FIELD, IT WOULD HAVE ACCESS TO USEROUTEERROR RR HOOK
   const error = useRouteError();
-  // console.log(error);
+  console.log(error);
 
   return (
     <div>
@@ -16,9 +12,7 @@ function Error() {
       <p>{error.data || error.message}</p>
 
       <LinkButton to="-1">&larr; Go back</LinkButton>
-      {/* ALTERNATE SOLUTION  */}
-      {/* <LinkButton onClick={() => navigate(-1)}>&larr; Go back</LinkButton> */}
-      {/* <button onClick={() => navigate(-1)}>&larr; Go back</button> */}
+      {/* <button onClick={() => navigate(-1)}></button> */}
     </div>
   );
 }

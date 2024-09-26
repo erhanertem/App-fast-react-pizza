@@ -1,8 +1,9 @@
-import { useSelector } from 'react-redux';
-import CreateUser from '../features/user/CreateUser';
-import Button from './Button';
+import { useSelector } from "react-redux";
+import CreateUser from "./../features/user/CreateUser";
+import Button from "./Button";
 
 function Home() {
+  // READ username FROM RTK STORE
   const username = useSelector((state) => state.user.username);
 
   return (
@@ -15,7 +16,8 @@ function Home() {
         </span>
       </h1>
 
-      {username === '' ? (
+      {/* IF USER DIALS BROWSER'S BACK BUTTON FROM THE USERNAME CREATED STATE, WE DO NOT WANT TO RE-ASK FOR NAME */}
+      {username === "" ? (
         <CreateUser />
       ) : (
         <Button to="/menu" type="primary">

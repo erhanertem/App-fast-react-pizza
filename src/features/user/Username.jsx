@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 
 function Username() {
-  // Get a hold of the state via react-redux useSelector hook
+  // Read state from RTK store
   const username = useSelector((state) => state.user.username);
 
-  // GUARD CLAUSE - DO NOT RENDER THE COMPONENT IF THERE IS NO USERNAME
+  // GUARD CLAUSE
   if (!username) return null;
 
   return (

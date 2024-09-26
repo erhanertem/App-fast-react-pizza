@@ -1,34 +1,32 @@
-/* eslint-disable react-refresh/only-export-components */
 // Test ID: IIDSAT
-
-import { useEffect } from 'react';
-import { useFetcher, useLoaderData } from 'react-router-dom';
-import { getOrder } from '../../services/apiRestaurant';
-
+import { useEffect } from "react";
+import { useFetcher, useLoaderData } from "react-router-dom";
+import { getOrder } from "../../services/apiRestaurant";
 import {
   calcMinutesLeft,
   formatCurrency,
   formatDate,
-} from '../../utils/helpers';
-
-import OrderItem from './OrderItem';
-import UpdateOrder from './UpdateOrder';
+} from "../../utils/helpers";
+import OrderItem from "./OrderItem";
+import UpdateOrderPriority from "./UpdateOrderPriority";
 
 function Order() {
-  // > useLoaderData hook gets a hold of the loader object data @ route (App.jsx) which is provided by calling the async loader() fetch function provided out side the component.
   const order = useLoaderData();
 
-  // TRIGGER FETCHING ROUTE LOADERS OR ACTIONS W/OUT CHANGING ROUTE
+  // FETCH DATA WITHOUT NAVIGATING TO THE ACTUAL PAGE via USEFETCHER RR HOOK
   const fetcher = useFetcher();
-  // console.log(fetcher);
-  // WHEN THIS PAGE IS LAUNCHED AND NOT FECTHING ACTIVELY....
+  //  WE WANT TO MAKE USE OF LOADER FUNCTION @ /MENU ENDPOINT W/OUT NAVIGATING TO IT VIA RR USEFETCHER HOOK
   useEffect(
     function () {
-      if (!fetcher.data && fetcher.state === 'idle') fetcher.load('/menu');
+      // GUARD CLAUSE
+      // MAKE SURE THERE IS NO DATA FETCHED YET FROM THE LOADER FN + LOADER FN IS NOT @ LOADING STATE
+      if (!fetcher.data && fetcher.state === "idle") {
+        // This function loads the data from this endpoint and stores it inside fetcher.data
+        fetcher.load("/menu");
+      }
     },
     [fetcher],
   );
-  // console.log(fetcher.data);
 
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
@@ -63,9 +61,9 @@ function Order() {
         <p className="font-medium">
           {deliveryIn >= 0
             ? `Only ${calcMinutesLeft(estimatedDelivery)} minutes left 😃`
-            : 'Order should have arrived'}
+            : "Order should have arrived"}
         </p>
-        <p className="text-xs font-medium text-stone-500">
+        <p className="text-xs text-stone-500">
           (Estimated delivery: {formatDate(estimatedDelivery)})
         </p>
       </div>
@@ -73,12 +71,12 @@ function Order() {
       <ul className="divide-y divide-stone-200 border-b border-t">
         {cart.map((item) => (
           <OrderItem
-            item={item}
             key={item.pizzaId}
-            isLoadingIngredients={fetcher.state === 'loading'}
+            item={item}
+            isLoadingIngredients={fetcher.state === "loading"}
             ingredients={
-              fetcher?.data?.find((el) => el.id === item.pizzaId).ingredients ??
-              []
+              fetcher?.data?.find((el) => el.id === item.pizzaId)
+                ?.ingredients ?? []
             }
           />
         ))}
@@ -97,18 +95,16 @@ function Order() {
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
-
-      {!priority && <UpdateOrder order={order} />}
+      {!priority && <UpdateOrderPriority order={order} />}
     </div>
   );
 }
 
-// > ASYNC FETCH OPERATION FUNCTION TO RETRIEVE A SPECIFIC DATA
-// IMPORTANT!! We can't use useParams to read the id in order to complete the API call. Because react-router hooks only lives within the component. In such situations, react-router provides the params object which snatches params from the URL.
+// ESTABLISH LOADER FUNCTION HERE WHICH TO BE CALLED FROM ROUTE LOADER
 export async function loader({ params }) {
-  // console.log(params);
-  // params is an object --> {orderId: '11'}
-  const order = await getOrder(params.orderId);
+  // NOTE: USEPARAMS COULD NO TBE UTILIZED HERE AS ITS ONLY FOR USE INSIDE COMPONENTS. IN ORDER TO GET A HOLD OF THE URL PARAMS ID, RR PROVIDES {PARAMS} PROP THAT GOES INSIDE LOADER FUNCTION
+  // NOTE: params.orderID matches the param namespace @ path definition - path: '/order/:orderID', @ app.jsx
+  const order = await getOrder(params.orderID);
   return order;
 }
 
