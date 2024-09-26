@@ -59,9 +59,9 @@ Key take-aways from this project:
 
 &emsp;
 
-#### [Fast React Pizza Co.](https://app-fastreactpizzaco-erhan-ertem.netlify.app/)
+#### <img src="./push.gif" width="30px"/>[Fast React Pizza Co.](https://app-fastreactpizzaco-erhan-ertem.netlify.app/)
 
-<img src="./screenshot.webp" width="500px"/>
+<img src="./screenshot.webp" width="600px"/>
 
 ---
 
